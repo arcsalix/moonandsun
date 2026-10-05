@@ -1,0 +1,1607 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sun &amp; moon — our report</title>
+  <style>
+    :root {
+      --ink: #34344f;
+      --muted: rgba(52, 52, 79, .66);
+      --line: rgba(93, 96, 139, .16);
+      --card: rgba(255, 255, 255, .58);
+      --sun: #f5cf8d;
+      --sun-deep: #bd8155;
+      --moon: #d9dcff;
+      --moon-deep: #8588bd;
+      --accent: var(--moon-deep);
+      --accent-deep: var(--moon-deep);
+      --bg0: #f8faff;
+      --bg1: #eef1ff;
+      --bg2: #f8edf5;
+      --glow-a: rgba(190, 198, 255, .62);
+      --glow-b: rgba(255, 213, 202, .48);
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+      --sans: ui-sans-serif, -apple-system, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html.day {
+      --ink: #493a42;
+      --muted: rgba(73, 58, 66, .68);
+      --line: rgba(154, 111, 112, .18);
+      --card: rgba(255, 255, 255, .58);
+      --accent: var(--sun-deep);
+      --accent-deep: var(--sun-deep);
+      --bg0: #fffaf1;
+      --bg1: #fff0e7;
+      --bg2: #f1eaff;
+      --glow-a: rgba(255, 218, 159, .62);
+      --glow-b: rgba(255, 205, 218, .5);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      background:
+        radial-gradient(1000px 660px at 82% 7%, var(--glow-a), transparent 64%),
+        radial-gradient(900px 680px at 8% 76%, var(--glow-b), transparent 66%),
+        linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 52%, var(--bg2) 100%);
+      background-attachment: fixed;
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: color .8s ease, background .8s ease;
+      min-height: 100%;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(120% 90% at 50% 40%, transparent 45%, rgba(0, 0, 0, .34) 100%);
+      mix-blend-mode: multiply;
+      opacity: 0;
+    }
+
+    html.day body::after {
+      opacity: 0
+    }
+
+    #sky {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      display: block
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 90px
+    }
+
+    /* ---------- top bar ---------- */
+    .bar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--bg0) 62%, transparent), transparent);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 19px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: .9;
+    }
+
+    .brand .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 16px 4px color-mix(in srgb, var(--accent) 60%, transparent);
+      animation: pulse 2.6s ease-in-out infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1
+      }
+
+      50% {
+        transform: scale(.72);
+        opacity: .7
+      }
+    }
+
+    .toggle {
+      appearance: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: transform .25s ease, background .3s ease, border-color .3s ease;
+    }
+
+    .toggle:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent)
+    }
+
+    .toggle .ic {
+      font-size: 15px;
+      line-height: 1
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 42px 0 8px
+    }
+
+    .orbit {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      margin: 8px auto 26px;
+      border-radius: 50%;
+      border: 1px dashed var(--line);
+      animation: spin 44s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .orbit .body {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .orbit .sun {
+      width: 96px;
+      height: 96px;
+      left: 50%;
+      top: 0;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 34% 30%, #fff3d0, var(--sun) 42%, var(--sun-deep) 100%);
+      box-shadow: 0 0 60px 14px rgba(255, 170, 80, .45), 0 0 140px 40px rgba(255, 140, 60, .22);
+    }
+
+    .orbit .moon {
+      width: 78px;
+      height: 78px;
+      left: 50%;
+      top: 100%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 34% 30%, #ffffff, var(--moon) 45%, var(--moon-deep) 100%);
+      box-shadow: 0 0 44px 10px rgba(150, 170, 255, .36), inset -10px -8px 0 0 rgba(90, 100, 170, .35);
+    }
+
+    .orbit .moon::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      left: 18px;
+      top: 22px;
+      background: rgba(120, 130, 200, .35);
+      box-shadow: 24px 18px 0 -4px rgba(120, 130, 200, .3), 10px 38px 0 -6px rgba(120, 130, 200, .25);
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .orbit {
+        animation: none
+      }
+    }
+
+    .kicker {
+      font-size: 12px;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 14px
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-weight: 500;
+      margin: 0;
+      font-size: clamp(46px, 10.5vw, 116px);
+      line-height: .98;
+      letter-spacing: -.015em;
+    }
+
+    h1 .amp {
+      font-style: italic;
+      background: linear-gradient(100deg, var(--moon) 0%, var(--moon-deep) 28%, var(--sun-deep) 62%, var(--sun) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      padding: 0 .06em;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: clamp(14px, 2.4vw, 17px);
+      margin: 18px auto 0;
+      max-width: 46ch;
+      line-height: 1.7
+    }
+
+    .since {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    /* ---------- live counter ---------- */
+    .count {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 52px 0 0;
+    }
+
+    .cell {
+      position: relative;
+      padding: 26px 12px 22px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+
+    .cell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .5;
+      background: radial-gradient(90% 70% at 50% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+    }
+
+    .cell b {
+      position: relative;
+      display: block;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(30px, 7vw, 58px);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cell span {
+      position: relative;
+      display: block;
+      margin-top: 10px;
+      font-size: 11px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    @media (max-width:620px) {
+      .count {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    .beat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 30px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .16em;
+      text-transform: uppercase
+    }
+
+    .beat .h {
+      width: 16px;
+      height: 16px;
+      background: var(--sun-deep);
+      clip-path: path("M8 15.4C7.7 15.1 0 9 0 4.6 0 2 2 0 4.3 0 6 0 7.3 1 8 2.2 8.7 1 10 0 11.7 0 14 0 16 2 16 4.6 16 9 8.3 15.1 8 15.4Z");
+      animation: beat 1.15s ease-in-out infinite
+    }
+
+    @keyframes beat {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      18% {
+        transform: scale(1.35)
+      }
+
+      36% {
+        transform: scale(1)
+      }
+
+      54% {
+        transform: scale(1.22)
+      }
+    }
+
+    /* ---------- sections ---------- */
+    section {
+      margin-top: 104px
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 26px
+    }
+
+    .sec-head h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      margin: 0;
+      font-size: clamp(26px, 4.6vw, 42px);
+      letter-spacing: -.01em
+    }
+
+    .sec-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: .14em;
+      text-transform: uppercase
+    }
+
+    .report {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--card);
+      backdrop-filter: blur(6px);
+      overflow: hidden
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 19px 24px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .row:last-child {
+      border-bottom: 0
+    }
+
+    .row .k {
+      color: var(--muted);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .row .k i {
+      font-style: normal;
+      font-size: 17px;
+      opacity: .85
+    }
+
+    .row .v {
+      font-family: var(--serif);
+      font-size: clamp(19px, 3.4vw, 26px);
+      font-variant-numeric: tabular-nums;
+      text-align: right
+    }
+
+    .row.big .v {
+      color: var(--accent)
+    }
+
+    @media (max-width:520px) {
+      .row {
+        padding: 16px 18px
+      }
+
+      .row .k {
+        font-size: 13px
+      }
+    }
+
+    .bar-line {
+      height: 8px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--ink) 10%, transparent);
+      overflow: hidden;
+      margin-top: 20px
+    }
+
+    .bar-line i {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--moon-deep), var(--sun-deep), var(--sun));
+      transition: width 1.6s cubic-bezier(.2, .8, .2, 1)
+    }
+
+    .bar-cap {
+      margin: 12px 2px 0;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase
+    }
+
+    /* ---------- HERE button ---------- */
+    .here-block {
+      text-align: center;
+      padding: 8px 0
+    }
+
+    .here-shell {
+      position: relative;
+      display: inline-block;
+      padding: 34px 30px 30px;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(6px);
+      max-width: 560px
+    }
+
+    .here-shell p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75
+    }
+
+    .here-btn {
+      appearance: none;
+      cursor: pointer;
+      border: 0;
+      color: #12102a;
+      font-family: var(--serif);
+      font-size: clamp(26px, 6vw, 40px);
+      letter-spacing: .04em;
+      padding: 14px 52px;
+      border-radius: 999px;
+      background: linear-gradient(100deg, var(--moon) 0%, #ffffff 22%, var(--sun) 78%, var(--sun-deep) 100%);
+      box-shadow: 0 12px 40px -12px color-mix(in srgb, var(--accent) 70%, transparent), 0 0 0 1px rgba(255, 255, 255, .25) inset;
+      transition: transform .22s ease, box-shadow .3s ease, filter .3s ease;
+    }
+
+    .here-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      filter: saturate(1.08);
+      box-shadow: 0 20px 60px -14px color-mix(in srgb, var(--accent) 85%, transparent)
+    }
+
+    .here-btn:active {
+      transform: translateY(0) scale(.98)
+    }
+
+    .here-btn:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px
+    }
+
+    .btn-wrap {
+      position: relative;
+      display: inline-block;
+      border-radius: 999px
+    }
+
+    .pulse-ring {
+      position: absolute;
+      inset: -5px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      animation: ring 2.8s ease-out infinite;
+      pointer-events: none;
+      opacity: 0
+    }
+
+    @keyframes ring {
+      0% {
+        transform: scale(.72);
+        opacity: .55
+      }
+
+      70% {
+        opacity: 0
+      }
+
+      100% {
+        transform: scale(1.35);
+        opacity: 0
+      }
+    }
+
+    .secret {
+      margin-top: 20px;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 17px;
+      color: var(--accent);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .9s ease, transform .9s ease;
+      min-height: 24px
+    }
+
+    .secret.on {
+      opacity: 1;
+      transform: none
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: 86px;
+      translate: -50% 0;
+      z-index: 7;
+      pointer-events: none;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+      background: color-mix(in srgb, var(--bg0) 74%, transparent);
+      backdrop-filter: blur(12px);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(14px, 2.6vw, 17px);
+      color: var(--ink);
+      box-shadow: 0 18px 50px -18px color-mix(in srgb, var(--accent) 80%, transparent);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity .5s ease, transform .5s ease;
+      max-width: 88vw;
+      text-align: center
+    }
+
+    .toast.on {
+      opacity: 1;
+      transform: none
+    }
+
+    /* ---------- final letter ---------- */
+    .letter {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--card);
+      backdrop-filter: blur(6px);
+      padding: clamp(28px, 5vw, 58px);
+      text-align: center;
+      overflow: hidden
+    }
+
+    .letter::before {
+      content: "";
+      position: absolute;
+      inset: -40% -10% auto;
+      height: 70%;
+      background: radial-gradient(60% 100% at 50% 100%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+    }
+
+    .letter h3 {
+      position: relative;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(24px, 4.6vw, 38px);
+      margin: 0 0 22px
+    }
+
+    .letter p {
+      position: relative;
+      margin: 0 auto 18px;
+      max-width: 62ch;
+      line-height: 1.95;
+      font-size: clamp(15px, 2.5vw, 18px);
+      color: color-mix(in srgb, var(--ink) 88%, transparent)
+    }
+
+    .letter p.small {
+      font-size: 14px;
+      color: var(--muted)
+    }
+
+    .sig {
+      position: relative;
+      margin-top: 30px;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(20px, 4vw, 28px)
+    }
+
+    .sig .h {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-left: 10px;
+      vertical-align: -2px;
+      background: var(--sun-deep);
+      clip-path: path("M9 17.4C8.7 17.1 0 10 0 5.2 0 2.3 2.2 0 4.8 0 6.7 0 8.2 1.1 9 2.5 9.8 1.1 11.3 0 13.2 0 15.8 0 18 2.3 18 5.2 18 10 9.3 17.1 9 17.4Z")
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      padding: 0 24px 60px
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .95s ease, transform .95s cubic-bezier(.2, .8, .2, 1)
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none
+    }
+
+    .to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 6;
+      appearance: none;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 11px 16px;
+      backdrop-filter: blur(10px);
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .4s ease, transform .3s ease
+    }
+
+    .to-top.on {
+      opacity: .92;
+      pointer-events: auto
+    }
+
+    .to-top:hover {
+      transform: translateY(-3px)
+    }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(60% 50% at 50% 22%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%)
+    }
+
+    .flash.go {
+      animation: flash .9s ease-out
+    }
+
+    @keyframes flash {
+      0% {
+        opacity: 0
+      }
+
+      18% {
+        opacity: .9
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none
+      }
+
+      .pulse-ring,
+      .beat .h,
+      .brand .dot {
+        animation: none
+      }
+    }
+
+    /* ---------- minimal theme finish ---------- */
+    html:not(.day) {
+      color-scheme: dark;
+      --ink: #e5e4e8;
+      --muted: rgba(205, 205, 214, .62);
+      --line: rgba(205, 205, 214, .13);
+      --card: rgba(20, 21, 27, .82);
+      --accent: #aaa8c7;
+      --accent-deep: #aaa8c7;
+      --bg0: #08090c;
+      --bg1: #0b0c10;
+      --bg2: #101116;
+      --glow-a: transparent;
+      --glow-b: transparent;
+    }
+
+    html.day {
+      color-scheme: light;
+    }
+
+    body {
+      background: var(--bg0);
+      transition: color .35s ease, background-color .35s ease;
+    }
+
+    body::after {
+      display: none;
+    }
+
+    #sky {
+      opacity: .2;
+    }
+
+    .bar {
+      padding-top: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg0) 94%, transparent);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      font-size: 15px;
+      letter-spacing: .12em;
+    }
+
+    .brand .dot {
+      width: 7px;
+      height: 7px;
+      box-shadow: none;
+      animation: none;
+    }
+
+    .toggle,
+    .to-top {
+      background: var(--card);
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .hero {
+      padding-top: 30px;
+    }
+
+    .orbit {
+      width: 176px;
+      height: 176px;
+      margin-bottom: 22px;
+      border-style: solid;
+      border-color: var(--line);
+      box-shadow: none;
+      animation: none;
+    }
+
+    .orbit .sun {
+      box-shadow: 0 0 24px 4px rgba(255, 190, 110, .16);
+    }
+
+    .orbit .moon {
+      box-shadow: 0 0 22px 4px rgba(155, 165, 230, .14), inset -8px -6px 0 0 rgba(104, 110, 174, .2);
+    }
+
+    h1 .amp {
+      background: none;
+      color: var(--accent);
+      -webkit-text-fill-color: currentColor;
+    }
+
+    .since {
+      background: transparent;
+      border-radius: 8px;
+    }
+
+    .count {
+      gap: 10px;
+      margin-top: 38px;
+    }
+
+    .cell,
+    .report,
+    .here-shell,
+    .letter {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .cell {
+      padding: 22px 12px 18px;
+    }
+
+    .cell::before,
+    .letter::before {
+      display: none;
+    }
+
+    section {
+      margin-top: 78px;
+    }
+
+    .sec-head {
+      margin-bottom: 18px;
+    }
+
+    .row {
+      padding-top: 16px;
+      padding-bottom: 16px;
+      transition: background .2s ease;
+    }
+
+    .row:hover {
+      background: color-mix(in srgb, var(--ink) 4%, transparent);
+    }
+
+    .bar-line,
+    .bar-line i {
+      border-radius: 4px;
+    }
+
+    .here-shell {
+      padding: 28px 26px 24px;
+    }
+
+    .here-btn {
+      padding: 12px 44px;
+      border: 1px solid rgba(255, 236, 200, .2);
+      border-radius: 999px;
+      background: #d2b078;
+      color: #17140f;
+      letter-spacing: .08em;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .2);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .here-btn:hover {
+      transform: translateY(-2px);
+      background: #dfbf88;
+      box-shadow: 0 9px 24px rgba(0, 0, 0, .26);
+    }
+
+    .here-btn:focus-visible {
+      outline-color: #d2b078;
+    }
+
+    .pulse-ring {
+      display: none;
+    }
+
+    .toast {
+      background: var(--card);
+      box-shadow: none;
+    }
+
+    .letter {
+      padding: clamp(26px, 5vw, 48px);
+    }
+
+    .letter p {
+      line-height: 1.8;
+    }
+
+    .flash {
+      opacity: 0;
+    }
+
+    @media (max-width: 620px) {
+      .hero {
+        padding-top: 28px;
+      }
+
+      .orbit {
+        width: 174px;
+        height: 174px;
+      }
+    }
+
+    /* ---------- quiet, fog-inspired palette ---------- */
+    html:not(.day) {
+      --ink: #e1e7e8;
+      --muted: rgba(199, 210, 212, .66);
+      --line: rgba(200, 215, 217, .12);
+      --card: rgba(33, 43, 46, .66);
+      --sun: #d4dcdd;
+      --sun-deep: #929fa2;
+      --moon: #e1e7e8;
+      --moon-deep: #a9b6b8;
+      --accent: #aebdc0;
+      --accent-deep: #aebdc0;
+      --bg0: #111719;
+      --bg1: #182124;
+      --bg2: #202a2d;
+      --glow-a: rgba(139, 159, 162, .12);
+      --glow-b: rgba(113, 133, 136, .1);
+      --button-ink: #20292b;
+    }
+
+    html.day {
+      --ink: #394548;
+      --muted: rgba(67, 82, 86, .68);
+      --line: rgba(80, 100, 104, .16);
+      --card: rgba(247, 250, 250, .58);
+      --sun: #e5e9e8;
+      --sun-deep: #aebabc;
+      --moon: #edf1f0;
+      --moon-deep: #c2cccd;
+      --accent: #718286;
+      --accent-deep: #718286;
+      --bg0: #e8eeee;
+      --bg1: #dce4e5;
+      --bg2: #eef1f1;
+      --glow-a: rgba(247, 250, 250, .72);
+      --glow-b: rgba(182, 198, 200, .3);
+      --button-ink: #f4f7f7;
+    }
+
+    body {
+      background:
+        radial-gradient(75vw 60vh at 80% 12%, var(--glow-a), transparent 72%),
+        radial-gradient(70vw 60vh at 8% 72%, var(--glow-b), transparent 74%),
+        linear-gradient(155deg, var(--bg0), var(--bg1) 52%, var(--bg2));
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 52% 36%, color-mix(in srgb, var(--ink) 5%, transparent), transparent 48%),
+        radial-gradient(ellipse at 88% 64%, color-mix(in srgb, var(--ink) 4%, transparent), transparent 42%);
+      filter: blur(32px);
+      opacity: .7;
+    }
+
+    #sky {
+      opacity: .09;
+    }
+
+    .bar {
+      background: color-mix(in srgb, var(--bg0) 86%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .orbit {
+      border-color: color-mix(in srgb, var(--ink) 14%, transparent);
+      animation: spin 90s linear infinite;
+    }
+
+    .orbit .sun {
+      background: radial-gradient(circle at 34% 30%, var(--sun), var(--sun-deep));
+      box-shadow: 0 0 28px 8px color-mix(in srgb, var(--sun) 18%, transparent);
+    }
+
+    .orbit .moon {
+      background: radial-gradient(circle at 34% 30%, var(--moon), var(--moon-deep));
+      box-shadow: 0 0 24px 6px color-mix(in srgb, var(--moon) 14%, transparent), inset -8px -6px 0 rgba(55, 68, 70, .16);
+    }
+
+    .orbit .moon::after {
+      background: color-mix(in srgb, var(--accent) 32%, transparent);
+      box-shadow: 24px 18px 0 -4px color-mix(in srgb, var(--accent) 28%, transparent), 10px 38px 0 -6px color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+
+    .since {
+      border-color: var(--line);
+      color: var(--muted);
+    }
+
+    .cell,
+    .report,
+    .here-shell,
+    .letter {
+      border-color: var(--line);
+      background: var(--card);
+    }
+
+    .cell::before {
+      opacity: .12;
+    }
+
+    .bar-line {
+      background: color-mix(in srgb, var(--ink) 10%, transparent);
+    }
+
+    .bar-line i {
+      background: linear-gradient(90deg, var(--moon-deep), var(--accent), var(--sun-deep));
+    }
+
+    .here-shell {
+      background: color-mix(in srgb, var(--card) 82%, var(--bg0));
+    }
+
+    .here-btn {
+      border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+      background: var(--accent);
+      color: var(--button-ink);
+      box-shadow: none;
+    }
+
+    .here-btn:hover {
+      background: var(--accent);
+      box-shadow: none;
+      filter: brightness(1.08);
+    }
+
+    .here-btn:focus-visible {
+      outline-color: var(--accent);
+    }
+
+    .toast,
+    .to-top,
+    .toggle {
+      border-color: var(--line);
+      background: var(--card);
+      box-shadow: none;
+    }
+
+    .letter p {
+      color: color-mix(in srgb, var(--ink) 88%, transparent);
+    }
+
+    footer {
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body {
+        background-attachment: scroll;
+      }
+
+      .orbit {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="flash" id="flash" aria-hidden="true"></div>
+
+  <div class="bar">
+    <div class="brand"><span class="dot"></span> sun &amp; moon</div>
+    <button class="toggle" id="theme" type="button" aria-label="Switch between night and day">
+      <span class="ic" id="themeIcon">☾</span><span id="themeLabel">night</span>
+    </button>
+  </div>
+
+  <div class="wrap">
+
+    <!-- ================= HERO / TOP REQUEST ================= -->
+    <header class="hero" id="top">
+      <div class="orbit" aria-hidden="true">
+        <div class="body sun"></div>
+        <div class="body moon"></div>
+      </div>
+
+      <p class="kicker">a report written in the sky</p>
+      <h1>sun <span class="amp">&amp;</span> moon</h1>
+      <p class="sub">
+        one is fire, one is quiet light. they almost never meet —
+        and still, every single day, they hand the sky to each other.
+        sounds familiar.
+      </p>
+      <div class="since">together since 6 august 2026</div>
+
+      <div class="count" id="count" aria-live="polite">
+        <div class="cell"><b id="cDays">0</b><span>days</span></div>
+        <div class="cell"><b id="cHours">0</b><span>hours</span></div>
+        <div class="cell"><b id="cMins">0</b><span>minutes</span></div>
+        <div class="cell"><b id="cSecs">0</b><span>seconds</span></div>
+      </div>
+
+      <div class="beat"><span class="h" aria-hidden="true"></span> and still counting, every heartbeat</div>
+    </header>
+
+    <!-- ================= REPORT ================= -->
+    <section id="report" class="reveal">
+      <div class="sec-head">
+        <h2>the report</h2>
+        <p>6 aug 2026 → today</p>
+      </div>
+
+      <div class="report">
+        <div class="row big">
+          <div class="k"><i>☀</i> days we have been us</div>
+          <div class="v" id="rDays">—</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>☾</i> hours of us</div>
+          <div class="v" id="rHours">—</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>♥</i> minutes of us</div>
+          <div class="v" id="rMins">—</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>✦</i> heartbeats shared (about)</div>
+          <div class="v" id="rBeats">—</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>☾</i> full moons we have seen</div>
+          <div class="v" id="rMoons">—</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>☀</i> sunrises we did not waste</div>
+          <div class="v" id="rSuns">—</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>✧</i> times i chose you</div>
+          <div class="v">every time</div>
+        </div>
+        <div class="row">
+          <div class="k"><i>⚑</i> times i would choose you again</div>
+          <div class="v">all of them</div>
+        </div>
+      </div>
+
+      <div class="bar-line"><i id="bar"></i></div>
+      <div class="bar-cap" id="barCap">loading our next sunrise…</div>
+    </section>
+
+    <!-- ================= HERE ================= -->
+    <section id="here" class="reveal">
+      <div class="sec-head">
+        <h2>one small thing</h2>
+        <p>press it</p>
+      </div>
+      <div class="here-block">
+        <div class="here-shell">
+          <p>
+            if the sky feels heavy, or the day is too loud, or you just want to be
+            at the beginning again — there is a button for that.
+          </p>
+          <span class="btn-wrap">
+            <button class="here-btn" id="hereBtn" type="button">here</button>
+            <span class="pulse-ring" aria-hidden="true"></span>
+          </span>
+          <div class="secret" id="secret">↑ you are at the top again — and i am still here.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LETTER ================= -->
+    <section id="letter" class="reveal">
+      <div class="sec-head">
+        <h2>last page</h2>
+        <p>the actual point</p>
+      </div>
+      <div class="letter">
+        <h3>to my moon, from your sun</h3>
+        <p>
+          thank you for the mornings i get to wake up into, and for the nights you make
+          feel less dark. thank you for being loud when i go quiet, and for going quiet
+          with me when the world is too much.
+        </p>
+        <p>
+          i know the distance can make some days feel especially quiet, and lonely. i
+          wish i could close every mile with a hug. until we can, remember that you're
+          loved through every call, every message, and every day we spend getting closer
+          to being together.
+        </p>
+        <p>
+          i counted the days in numbers because numbers are easy. but the real report is
+          smaller and much bigger than that: the way you say my name, the way you fall
+          asleep mid-sentence, the way a boring tuesday turns into something i want to
+          remember.
+        </p>
+        <p>
+          we are not the same light. we were never supposed to be. you burn, I reflect —
+          and between us there is an eclipse, and it is my favourite place in the world.
+        </p>
+        <p class="small">
+          same sky. different light. same side, always.
+        </p>
+        <div class="sig">yours, endlessly <span class="h" aria-hidden="true"></span></div>
+      </div>
+    </section>
+
+  </div>
+
+  <button class="to-top" id="toTop" type="button">↑ top</button>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">↑ you are at the top again — and i am still here.</div>
+
+  <footer>sun &amp; moon · 6 august 2026 · made by hand, for you</footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* ============ the date we count from ============ */
+      var START = new Date(2026, 7, 6, 0, 0, 0); // 6 August 2026, local time
+
+      var $ = function (id) { return document.getElementById(id); };
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ============ theme: night (moon) / day (sun) ============ */
+      var html = document.documentElement;
+      var hour = new Date().getHours();
+      var night = hour < 7 || hour >= 20;      // start with whatever the sky is doing
+
+      function applyTheme() {
+        html.classList.toggle("day", !night);
+        $("themeIcon").textContent = night ? "☾" : "☀";
+        $("themeLabel").textContent = night ? "Night" : "Day";
+        if (window.__sky) window.__sky.mode(night ? "night" : "day");
+      }
+      $("theme").addEventListener("click", function () { night = !night; applyTheme(); });
+      applyTheme();
+
+      /* ============ counters ============ */
+      function pad(n, len) {
+        n = String(n);
+        while (n.length < len) n = "0" + n;
+        return n;
+      }
+      var fmt = function (n) { return n.toLocaleString("en-US"); };
+
+      function tick() {
+        var now = new Date();
+        var diff = now - START;
+
+        if (diff < 0) {
+          // not started yet -> gentle countdown, same layout
+          var up = -diff;
+          $("cDays").textContent = Math.floor(up / 86400000);
+          $("cHours").textContent = pad(Math.floor(up / 3600000) % 24, 2);
+          $("cMins").textContent = pad(Math.floor(up / 60000) % 60, 2);
+          $("cSecs").textContent = pad(Math.floor(up / 1000) % 60, 2);
+          // report stays honest before the start line too
+          $("rDays").textContent = "0";
+          $("rHours").textContent = "0";
+          $("rMins").textContent = "0";
+          $("rBeats").textContent = "0";
+          $("rMoons").textContent = "0.0";
+          $("rSuns").textContent = "0";
+          $("bar").style.width = "0%";
+          $("barCap").textContent = "counting down to 6 august 2026";
+          return;
+        }
+
+        var days = Math.floor(diff / 86400000);
+        var hours = Math.floor(diff / 3600000);
+        var mins = Math.floor(diff / 60000);
+        var secs = Math.floor(diff / 1000);
+
+        $("cDays").textContent = fmt(days);
+        $("cHours").textContent = pad(hours % 24, 2);
+        $("cMins").textContent = pad(mins % 60, 2);
+        $("cSecs").textContent = pad(secs % 60, 2);
+
+        $("rDays").textContent = fmt(days);
+        $("rHours").textContent = fmt(hours);
+        $("rMins").textContent = fmt(mins);
+        $("rBeats").textContent = fmt(Math.round(mins * 72));            // ~72 bpm
+        $("rMoons").textContent = (days / 29.53).toFixed(1);
+        $("rSuns").textContent = fmt(days);
+
+        // progress to the next hundred days together
+        var target = (Math.floor(days / 100) + 1) * 100;
+        var pct = Math.min(100, (days / target) * 100);
+        $("bar").style.width = pct.toFixed(2) + "%";
+        var left = target - days;
+        $("barCap").textContent = left === 1
+          ? "1 day until " + target + " days together"
+          : left + " days until " + target + " days together";
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      /* ============ scroll reveal ============ */
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.14 });
+      document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+
+      /* ============ the "here" button ============ */
+      var secret = $("secret");
+      var toast = $("toast");
+      var flash = $("flash");
+      var toastTimer = null;
+
+      function burst(x, y) {
+        if (window.__sky) window.__sky.burst(x, y);
+      }
+
+      function goTop() {
+        // behaves like a fresh load: jumps straight to the top request and replays the intro
+        window.scrollTo({ top: 0, behavior: "auto" });
+        if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
+        replayIntro();
+      }
+
+      function replayIntro() {
+        var hero = $("top");
+        hero.style.animation = "none";
+        void hero.offsetWidth;
+        hero.style.animation = "";
+        flash.classList.remove("go");
+        void flash.offsetWidth;
+        flash.classList.add("go");
+      }
+
+      function showToast() {
+        toast.classList.add("on");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove("on"); }, 5200);
+      }
+
+      $("hereBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        var r = $("hereBtn").getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2);
+        secret.classList.add("on");                             // stays revealed
+        goTop();
+        showToast();
+      });
+
+      /* ============ floating "top" shortcut ============ */
+      var toTop = $("toTop");
+      toTop.addEventListener("click", goTop);
+      window.addEventListener("scroll", function () {
+        toTop.classList.toggle("on", window.scrollY > 600);
+      }, { passive: true });
+
+      /* ============ hearts + sky canvas ============ */
+      (function sky() {
+        var c = $("sky"), ctx = c.getContext("2d");
+        var W = 0, H = 0, DPR = 1;
+        var stars = [], hearts = [], shooting = [];
+        var isNight = night;
+
+        function resize() {
+          DPR = Math.min(2, window.devicePixelRatio || 1);
+          W = c.width = Math.floor(window.innerWidth * DPR);
+          H = c.height = Math.floor(window.innerHeight * DPR);
+          c.style.width = window.innerWidth + "px";
+          c.style.height = window.innerHeight + "px";
+          buildStars();
+          if (reduce && typeof draw === "function") draw(0, true);
+        }
+
+        function buildStars() {
+          var n = Math.round((window.innerWidth * window.innerHeight) / 9000);
+          n = Math.max(60, Math.min(220, n));
+          stars = [];
+          for (var i = 0; i < n; i++) {
+            stars.push({
+              x: Math.random() * W,
+              y: Math.random() * H,
+              r: (Math.random() * 1.5 + 0.4) * DPR,
+              t: Math.random() * Math.PI * 2,
+              s: 0.6 + Math.random() * 1.6
+            });
+          }
+        }
+
+        function heartPath(g, x, y, s, rot) {
+          g.save();
+          g.translate(x, y);
+          g.rotate(rot);
+          g.scale(s, s);
+          g.beginPath();
+          g.moveTo(0, 4.2);
+          g.bezierCurveTo(-4.6, 0.2, -7.2, -2.6, -7.2, -5.6);
+          g.bezierCurveTo(-7.2, -8.6, -5.2, -10.2, -3.2, -10.2);
+          g.bezierCurveTo(-1.6, -10.2, -0.5, -9.2, 0, -7.9);
+          g.bezierCurveTo(0.5, -9.2, 1.6, -10.2, 3.2, -10.2);
+          g.bezierCurveTo(5.2, -10.2, 7.2, -8.6, 7.2, -5.6);
+          g.bezierCurveTo(7.2, -2.6, 4.6, 0.2, 0, 4.2);
+          g.closePath();
+          g.restore();
+        }
+
+        function spawnHeart(x, y, opts) {
+          opts = opts || {};
+          hearts.push({
+            x: x, y: y,
+            vx: opts.vx !== undefined ? opts.vx : (Math.random() - 0.5) * 0.5,
+            vy: opts.vy !== undefined ? opts.vy : -(0.5 + Math.random() * 1.1),
+            s: opts.s || (0.55 + Math.random() * 0.9) * DPR,
+            rot: (Math.random() - 0.5) * 0.5,
+            vr: (Math.random() - 0.5) * 0.012,
+            life: 1,
+            decay: opts.decay || (0.004 + Math.random() * 0.004),
+            wob: Math.random() * Math.PI * 2
+          });
+        }
+
+        function burst(px, py) {
+          var x = px * DPR, y = py * DPR;
+          spawnHeart(x, y, {
+            vx: (Math.random() - 0.5) * 0.8 * DPR,
+            vy: -(0.8 + Math.random() * 0.5) * DPR,
+            s: (0.9 + Math.random() * 0.35) * DPR,
+            decay: 0.005 + Math.random() * 0.002
+          });
+        }
+
+        function draw(t, once) {
+          ctx.clearRect(0, 0, W, H);
+
+          /* stars / daylight flecks */
+          for (var i = 0; i < stars.length; i++) {
+            var st = stars[i];
+            var tw = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 0.0011 * st.s + st.t));
+            ctx.beginPath();
+            ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+            if (isNight) {
+              ctx.fillStyle = "rgba(226,233,255," + (0.55 * tw).toFixed(3) + ")";
+            } else {
+              ctx.fillStyle = "rgba(255,255,255," + (0.7 * tw).toFixed(3) + ")";
+            }
+            ctx.fill();
+          }
+
+          /* shooting stars, rarely */
+          if (isNight && Math.random() < 0.0035) {
+            shooting.push({
+              x: Math.random() * W * 0.9, y: Math.random() * H * 0.45,
+              vx: (4 + Math.random() * 4) * DPR, vy: (1.4 + Math.random() * 1.6) * DPR,
+              life: 1
+            });
+          }
+          for (var s2 = shooting.length - 1; s2 >= 0; s2--) {
+            var sh = shooting[s2];
+            sh.x += sh.vx; sh.y += sh.vy; sh.life -= 0.012;
+            if (sh.life <= 0) { shooting.splice(s2, 1); continue; }
+            var g = ctx.createLinearGradient(sh.x, sh.y, sh.x - sh.vx * 12, sh.y - sh.vy * 12);
+            g.addColorStop(0, "rgba(255,255,255," + (0.85 * sh.life).toFixed(3) + ")");
+            g.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.strokeStyle = g;
+            ctx.lineWidth = 1.6 * DPR;
+            ctx.beginPath();
+            ctx.moveTo(sh.x, sh.y);
+            ctx.lineTo(sh.x - sh.vx * 12, sh.y - sh.vy * 12);
+            ctx.stroke();
+          }
+
+          /* hearts */
+          for (var h = hearts.length - 1; h >= 0; h--) {
+            var p = hearts[h];
+            p.wob += 0.03;
+            p.x += p.vx + Math.sin(p.wob) * 0.35 * DPR;
+            p.y += p.vy;
+            p.vy += 0.012 * DPR;      // slight drag
+            p.vx *= 0.99;
+            p.rot += p.vr;
+            p.life -= p.decay;
+            if (p.life <= 0 || p.y < -80 * DPR) { hearts.splice(h, 1); continue; }
+
+            var alpha = Math.max(0, Math.min(1, p.life));
+            var grd = ctx.createLinearGradient(p.x, p.y - 10 * p.s, p.x, p.y + 5 * p.s);
+            var heartColor = isNight ? "255,255,255" : "24,24,32";
+            var heartShade = isNight ? "225,229,255" : "52,48,60";
+            if (isNight) {
+              grd.addColorStop(0, "rgba(" + heartColor + "," + alpha.toFixed(3) + ")");
+              grd.addColorStop(1, "rgba(" + heartShade + "," + alpha.toFixed(3) + ")");
+            } else {
+              grd.addColorStop(0, "rgba(" + heartShade + "," + alpha.toFixed(3) + ")");
+              grd.addColorStop(1, "rgba(" + heartColor + "," + alpha.toFixed(3) + ")");
+            }
+            ctx.shadowColor = "rgba(" + heartColor + "," + (0.28 * alpha).toFixed(3) + ")";
+            ctx.shadowBlur = 12 * p.s;
+            ctx.fillStyle = grd;
+            heartPath(ctx, p.x, p.y, p.s, p.rot);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+
+          if (!once) requestAnimationFrame(function (ts) { draw(ts); });
+        }
+
+        window.addEventListener("resize", resize);
+        window.addEventListener("click", function (e) {
+          if (e.target.closest("button")) return;
+          burst(e.clientX, e.clientY);
+        });
+
+        resize();
+        if (reduce) {
+          // reduced motion: draw a single static frame, no loop
+          draw(0, true);
+        } else {
+          requestAnimationFrame(function (ts) { draw(ts); });
+        }
+
+        window.__sky = {
+          burst: burst,
+          mode: function (m) { isNight = (m === "night"); }
+        };
+      })();
+    })();
+  </script>
+</body>
+
+</html>
